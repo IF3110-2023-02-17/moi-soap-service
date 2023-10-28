@@ -1,0 +1,1 @@
+docker build -t if3110-soap-service-1:latest .

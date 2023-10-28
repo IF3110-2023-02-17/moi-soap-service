@@ -1,0 +1,11 @@
+version: "3.3"
+services:
+  web:
+    image: if3110-soap-service-1:latest
+    ports:
+      - 8000:8000
+    hostname: web
+    environment:
+      - SOAP_DOCKER_CONFIG=on
+    volumes:
+      - .:/app
