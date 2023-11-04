@@ -2,30 +2,38 @@ package moi.soap.maven.utils;
 
 import lombok.Getter;
 
-public class ConfigApp {
+public class Config {
 
     @Getter
     private ConfigProperties cp;
-    private static ConfigApp instance = null;
+    @Getter
+    private ConfigDotenv env;
+    private static Config instance = null;
 
-    private ConfigApp() {
+    private Config() {
         String dockerConf = System.getenv("SOAP_DOCKER_CONFIG");
         if (dockerConf == null || dockerConf.equals("off")) {
             this.cp = new ConfigProperties("config.properties");
         } else {
             this.cp = new ConfigProperties("config.docker.properties");
         }
+        this.env = new ConfigDotenv();
+
     }
 
-    public static ConfigApp getInstance() {
+    public static Config getInstance() {
         if (instance == null) {
-            instance = new ConfigApp();
+            instance = new Config();
         }
         return instance;
     }
 
-    public String get(String key) {
+    public String getProp(String key) {
         return this.cp.getProp(key);
+    }
+
+    public String getEnv(String key) {
+        return this.env.getEnv(key);
     }
 
 }

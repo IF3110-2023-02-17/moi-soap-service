@@ -1,11 +1,25 @@
 version: "3.3"
 services:
-  web:
-    image: if3110-soap-service-1:latest
+#  soap-app:
+#    image: if3110-soap-service-1:latest
+#    ports:
+#      - 8002:8002
+#    hostname: soap-app
+#    environment:
+#      - SOAP_DOCKER_CONFIG=on
+#    volumes:
+#      - .:/app
+  soap-database:
+    image: mysql:latest
     ports:
-      - 8000:8000
-    hostname: web
-    environment:
-      - SOAP_DOCKER_CONFIG=on
+      - 3317:3307
+    hostname: soap-database
+    env_file:
+      - .env
     volumes:
-      - .:/app
+      - ./mysql:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+
+networks:
+  soap-app-soap-database:
+    driver: bridge
