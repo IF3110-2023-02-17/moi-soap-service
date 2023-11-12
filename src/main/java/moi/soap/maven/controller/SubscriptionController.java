@@ -40,9 +40,14 @@ public class SubscriptionController extends Controller {
     }
     @WebMethod
     @WebResult(name = "result", targetNamespace = "Subscription")
-    public List<String> httpClientTest(@WebParam(name="param") int param) throws Exception {
+    public List<Integer> httpClientTest(@WebParam(name="input") List<Integer>input) throws Exception {
         try {
-            return srv.subscription.testHttpClient();
+            System.out.println(input.size());
+            for (int i = 0; i < input.size(); i++){
+                System.out.println(input.get(i));
+            }
+
+            return input;
         } catch (Exception exp) {
             exp.printStackTrace();
             throw new Exception("200");

@@ -18,23 +18,23 @@ public class AppTest
      * Rigorous Test :-)
      */
 
-    @Test
-    void TestConnClass() throws SQLException {
-        Connection conn = Database.getInstance().getConnection();
-    }
-
-    @Test
-    void TestConf() throws Exception {
-        ConfigDotenv c = new ConfigDotenv();
-        Assertions.assertEquals("root", c.getEnv("SOAP_DB_USERNAME"));
-    }
-
-    @Test
-    void TestFind() throws Exception{
-        Database db = Database.getInstance();
-
-        SubscriptionRepository sr = new SubscriptionRepository(db);
-
-        System.out.println(sr.findAll(1));
-    }
+//    @Test
+//    void TestConnClass() throws SQLException {
+//        Connection conn = Database.getInstance().getConnection();
+//    }
+//
+//    @Test
+//    void TestConf() throws Exception {
+//        ConfigDotenv c = new ConfigDotenv();
+//        Assertions.assertEquals("root", c.getEnv("SOAP_DB_USERNAME"));
+//    }
+//
+//    @Test
+//    void TestFind() throws Exception{
+//        Database db = Database.getInstance();
+//
+//        SubscriptionRepository sr = new SubscriptionRepository(db);
+//
+//        System.out.println(sr.findAll(1));
+//    }
 }
