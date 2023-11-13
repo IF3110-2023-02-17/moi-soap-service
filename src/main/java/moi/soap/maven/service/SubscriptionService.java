@@ -7,6 +7,7 @@ import moi.soap.maven.enums.SubsStatus;
 import moi.soap.maven.exception.ResponseException;
 import moi.soap.maven.repository.RepositoryComp;
 
+import javax.jws.WebParam;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +28,30 @@ public class SubscriptionService extends Service {
         }
     }
 
+    public Subscription subscribe(int studioID, int subscriberID) throws ResponseException {
+        Subscription subscription = new Subscription(studioID, subscriberID);
+
+        this.repo.subscription.insertSubscription(subscription);
+
+        return subscription;
+    }
+
     public List<Subscription> getSubscriptionByStatusStudio(int studioID, SubsStatus status) throws ResponseException {
         return this.repo.subscription.findByStudioAndStatus(studioID, status);
+    }
+
+    public List<Subscription> checkStatus( List<Integer> subscriberIDs, List<Integer> studioIDs) throws ResponseException {
+        try {
+            List<Subscription> subscriptions = new ArrayList<>();
+            for (int i = 0; i < studioIDs.size(); i++) {
+                Subscription subs = new Subscription(studioIDs.get(i), subscriberIDs.get(i));
+                subscriptions.add(subs);
+            }
+            return this.repo.subscription.getSpecificSubscriptions(subscriptions);
+        } catch (ResponseException exp) {
+            exp.printStackTrace();
+            throw exp;
+        }
     }
 
     public List<String> testHttpClient() throws Exception {

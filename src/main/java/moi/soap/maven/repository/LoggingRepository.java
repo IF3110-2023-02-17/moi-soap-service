@@ -2,6 +2,8 @@ package moi.soap.maven.repository;
 
 import moi.soap.maven.database.Database;
 import moi.soap.maven.entity.Logging;
+import moi.soap.maven.exception.ResponseException;
+import org.apache.hc.core5.http.HttpStatus;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,27 +15,30 @@ public class LoggingRepository extends Repository {
         super(db);
     }
 
-    public void insert(Logging log) throws Exception {
+    public void insert(Logging log) throws ResponseException {
         try {
             Connection conn = this.db.getConnection();
 
             String sql = "INSERT INTO logging (ip, endpoint, requested_at, description) VALUES (?, ?, ?, ?)";
 
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, log.getIp());
-            preparedStatement.setString(2, log.getEndpoint());
-            preparedStatement.setTimestamp(3, log.getRequestedAt());
-            preparedStatement.setString(4, log.getDescription());
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, log.getIp());
+            statement.setString(2, log.getEndpoint());
+            statement.setTimestamp(3, log.getRequestedAt());
+            statement.setString(4, log.getDescription());
 
-            ResultSet raw = preparedStatement.executeQuery();
+            int numRowAffected = statement.executeUpdate();
 
-            System.out.println(raw);
+            if (numRowAffected != 1) {
+                throw new Exception("No Rows Affected");
+            }
 
-            preparedStatement.close();
+            statement.close();
             conn.close();
 
-        } catch (Exception e) {
-            throw new Exception("[Repo] " + e.getMessage());
+        } catch (Exception exp) {
+            exp.printStackTrace();
+            throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
         }
     }
 

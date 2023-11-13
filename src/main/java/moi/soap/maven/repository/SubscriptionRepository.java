@@ -1,13 +1,10 @@
 package moi.soap.maven.repository;
 
-import moi.soap.maven.client.HttpClientComp;
-import moi.soap.maven.client.HttpRestClient;
 import moi.soap.maven.database.Database;
 import moi.soap.maven.entity.Subscription;
 import moi.soap.maven.enums.SubsStatus;
 import moi.soap.maven.exception.ResponseException;
 import org.apache.hc.core5.http.HttpStatus;
-import org.apache.hc.core5.reactor.IOSession;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,6 +17,79 @@ public class SubscriptionRepository extends Repository {
     public SubscriptionRepository(Database db) {
         super(db);
     }
+    public List<Subscription> getSpecificSubscriptions(List<Subscription> subscriptions) throws ResponseException {
+        try {
+            StringBuilder where = new StringBuilder();
+            for (int i = 0; i < subscriptions.size(); i++) {
+                if (i == subscriptions.size() - 1) {
+                    where.append(String.format(" ( studio_id = ? AND subscriber_id = ? ) "));
+                } else {
+                    where.append(String.format(" ( studio_id = ? AND subscriber_id = ? ) OR "));
+                }
+            }
+
+            Connection conn = this.db.getConnection();
+
+            String sql = "SELECT studio_id, subscriber_id, status FROM subscription WHERE " + where;
+
+            System.out.println(sql);
+
+            PreparedStatement statement = conn.prepareStatement(sql);
+            int i = 1;
+            for (Subscription subscription: subscriptions) {
+                statement.setInt(i, subscription.getStudioId());
+                i++;
+                statement.setInt(i, subscription.getSubsId());
+                i++;
+            }
+            ResultSet raw = statement.executeQuery();
+
+            List<Subscription> result = new ArrayList<>();
+            while (raw.next()) {
+                Subscription subs = new Subscription(
+                        raw.getInt("studio_id"),
+                        raw.getInt("subscriber_id"),
+                        raw.getString("status")
+                );
+                result.add(subs);
+            }
+
+            statement.close();
+            conn.close();
+
+            return result;
+
+        } catch (Exception exp) {
+            exp.printStackTrace();
+            throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+    public void insertSubscription(Subscription subscription) throws ResponseException {
+        try {
+            Connection conn = this.db.getConnection();
+
+            String sql = "INSERT INTO subscription (studio_id, subscriber_id, status) VALUES (?, ?, ?)";
+
+            System.out.println( subscription.getStatus().toString());
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, subscription.getStudioId());
+            statement.setInt(2, subscription.getSubsId());
+            statement.setString(3, subscription.getStatus().toString());
+
+            int numRowAffected = statement.executeUpdate();
+
+            if (numRowAffected != 1) {
+                throw new Exception("No Rows Affected");
+            }
+
+            statement.close();
+            conn.close();
+
+        } catch (Exception exp) {
+            exp.printStackTrace();
+            throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
     public List<Subscription> findByStudioAndStatus(int studioID, SubsStatus status) throws ResponseException {
         try {
             Connection conn = this.db.getConnection();
@@ -28,12 +98,12 @@ public class SubscriptionRepository extends Repository {
 
             String sql = "SELECT studio_id, subscriber_id, status FROM subscription WHERE studio_id = ? AND status = ?";
 
-            PreparedStatement prepStatement = conn.prepareStatement(sql);
+            PreparedStatement statement = conn.prepareStatement(sql);
 
-            prepStatement.setInt(1, studioID);
-            prepStatement.setString(2, status.toString());
+            statement.setInt(1, studioID);
+            statement.setString(2, status.toString());
 
-            ResultSet raw = prepStatement.executeQuery();
+            ResultSet raw = statement.executeQuery();
 
             List<Subscription> subscriptions = new ArrayList<>();
             while (raw.next()) {
@@ -44,7 +114,7 @@ public class SubscriptionRepository extends Repository {
                 );
                 subscriptions.add(subs);
             }
-            prepStatement.close();
+            statement.close();
             conn.close();
 
             return subscriptions;
@@ -61,20 +131,20 @@ public class SubscriptionRepository extends Repository {
 
             String sql = "SELECT studio_id, subscriber_id, status FROM subscription ORDER BY ?";
 
-            PreparedStatement prepStatement = conn.prepareStatement(sql);
+            PreparedStatement statement = conn.prepareStatement(sql);
             switch (sortBy) {
                 case 1:
-                    prepStatement.setString(1, "status");
+                    statement.setString(1, "status");
                     break;
                 case 2:
-                    prepStatement.setString(1, "status DESC");
+                    statement.setString(1, "status DESC");
                     break;
                 default:
-                    prepStatement.setString(1, "subscriber_id");
+                    statement.setString(1, "subscriber_id");
                     break;
             }
 
-            ResultSet raw = prepStatement.executeQuery();
+            ResultSet raw = statement.executeQuery();
 
             List<Subscription> subscriptions = new ArrayList<>();
             while (raw.next()) {
@@ -85,7 +155,7 @@ public class SubscriptionRepository extends Repository {
                 );
                 subscriptions.add(subs);
             }
-            prepStatement.close();
+            statement.close();
             conn.close();
 
             return subscriptions;

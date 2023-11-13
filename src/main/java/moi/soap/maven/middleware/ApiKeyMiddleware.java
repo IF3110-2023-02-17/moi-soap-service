@@ -25,22 +25,24 @@ public class ApiKeyMiddleware {
      * @// TODO: 11/12/2023 maybe kalo sempet bisa dibuat verifyService untuk setiap Consumer, jadi MONO gk bisa pake punya Rest dan sebaliknya
      * */
     public String verifyAPIKey (WebServiceContext wsCtx) throws ResponseException {
+        try {
+            MessageContext ctx = wsCtx.getMessageContext();
+            Map<String, Object> headers = (Map<String, Object>) ctx.get(ctx.HTTP_REQUEST_HEADERS);
+            for (Map.Entry<String, Object> entry : headers.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                System.out.println("Key: " + key + ", Value: " + value);
+            }
+            String key = ((List<String>) headers.get("Api-Key")).get(0);
 
-        MessageContext ctx = wsCtx.getMessageContext();
-        Map<String, Object> headers = (Map<String, Object>) ctx.get(ctx.HTTP_REQUEST_HEADERS);
-//        System.out.println(headers);
-        for (Map.Entry<String, Object> entry : headers.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            System.out.println("Key: " + key + ", Value: " + value);
-        }
-        String key = ((List<String>) headers.get("Api-Key")).get(0);
+            if (!isAPIKeyValid(key)) {
+                throw new ResponseException("API Key Invalid", HttpStatus.SC_UNAUTHORIZED);
+            }
 
-        if (!isAPIKeyValid(key)) {
+            return getClientName(key);
+        } catch (Exception exp) {
             throw new ResponseException("API Key Invalid", HttpStatus.SC_UNAUTHORIZED);
         }
-
-        return getClientName(key);
     }
 
     public boolean isAPIKeyValid (String key) {
