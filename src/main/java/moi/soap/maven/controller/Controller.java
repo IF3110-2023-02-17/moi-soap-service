@@ -12,7 +12,7 @@ public abstract class Controller {
 
     @Resource
     protected WebServiceContext ctx;
-    private final String HTTP_EXCHANGE_KEY = "com.sun.xml.internal.ws.http.exchange";
+    protected final String HTTP_EXCHANGE_KEY = "com.sun.xml.internal.ws.http.exchange";
     protected ServiceComp srv;
     protected MiddlewareComp middleware;
 

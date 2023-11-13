@@ -8,8 +8,8 @@ import java.util.List;
 public interface ISubscriptionController {
     public List<Subscription> getSubscriptionStudio(int studioID) throws ResponseException;
     public List<Subscription> getSubscriptionSubscriber(int subscriberID) throws ResponseException;
-    public List<Subscription> getSubscriptionByStatusStudio(int studioID) throws ResponseException;
-    public List<Subscription> getSubscriptionByStatusSubscriber(int subscriberID) throws ResponseException;
+    public List<Subscription> getSubscriptionByStatusStudio(int studioID, String status) throws ResponseException;
+    public List<Subscription> getSubscriptionByStatusSubscriber(int subscriberID, String status) throws ResponseException;
     public Subscription subscribe(int studioID, int subscriberID) throws  ResponseException;
     public Subscription acceptSubscription(int studioID, int subscriberID) throws ResponseException;
     public Subscription rejectSubscription(int studioID, int subscriberID) throws ResponseException;

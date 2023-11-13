@@ -7,12 +7,11 @@ import org.apache.hc.core5.http.HttpStatus;
 import javax.xml.ws.WebServiceContext;
 
 public class MiddlewareComp {
-    private RepositoryComp repo;
     private ApiKeyMiddleware apiKey;
     private LoggingMiddleware log;
     public MiddlewareComp(RepositoryComp repo) {
-        this.repo = repo;
         this.apiKey = new ApiKeyMiddleware();
+        this.log = new LoggingMiddleware(repo);
     }
     public void handlerMiddleware (WebServiceContext ctx) throws ResponseException {
         try {
@@ -22,4 +21,9 @@ public class MiddlewareComp {
             throw exp;
         }
     }
+    public void testloggingRemoteAddr(WebServiceContext ctx, String key) {
+        System.out.println(log.getAddress(ctx.getMessageContext(), key));
+        System.out.println("PASS 2.1");
+    }
+
 }

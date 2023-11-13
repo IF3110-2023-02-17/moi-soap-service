@@ -2,7 +2,6 @@ package moi.soap.maven.controller;
 
 
 import lombok.NoArgsConstructor;
-import moi.soap.maven.entity.Subscription;
 import moi.soap.maven.exception.ResponseException;
 import moi.soap.maven.middleware.MiddlewareComp;
 import moi.soap.maven.service.ServiceComp;
@@ -13,7 +12,6 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
-import javax.xml.soap.SOAPException;
 import java.util.List;
 
 @NoArgsConstructor
@@ -25,26 +23,7 @@ public class SubscriptionController extends Controller {
     }
     @WebMethod
     @WebResult(name = "result", targetNamespace = "Subscription")
-    public List<Subscription> getSubscriptions(@WebParam(name="sortBy") int sortBy) {
-        try {
-
-            List<Subscription> result = this.srv.subscription.getAllSubscribers(sortBy);
-
-            return result;
-
-        } catch (Exception err) {
-            return null;
-        }
-    }
-
-    @WebMethod
-    @WebResult(name = "result", targetNamespace = "Subscription")
-    public void test() throws Exception {
-        throw new Exception("Ini Exception");
-    }
-    @WebMethod
-    @WebResult(name = "result", targetNamespace = "Subscription")
-    public List<Integer> httpClientTest(@WebParam(name="input") List<Integer>input) throws Exception {
+    public List<Integer> Example(@WebParam(name="input") List<Integer> input) throws Exception {
         try {
             this.middleware.handlerMiddleware(this.ctx);
 
@@ -52,7 +31,6 @@ public class SubscriptionController extends Controller {
             for (int i = 0; i < input.size(); i++){
                 System.out.println(input.get(i));
             }
-
             return input;
         } catch (ResponseException exp) {
             exp.printStackTrace();
