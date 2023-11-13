@@ -2,6 +2,7 @@ package moi.soap.maven.controller;
 
 
 import lombok.NoArgsConstructor;
+import moi.soap.maven.entity.Subscription;
 import moi.soap.maven.exception.ResponseException;
 import moi.soap.maven.middleware.MiddlewareComp;
 import moi.soap.maven.service.ServiceComp;
@@ -17,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @WebService(targetNamespace = "Subscription")
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
-public class SubscriptionController extends Controller {
+public class SubscriptionController extends Controller implements ISubscriptionController{
     public SubscriptionController (ServiceComp srv, MiddlewareComp middleware) {
         super(srv, middleware);
     }
@@ -38,5 +39,45 @@ public class SubscriptionController extends Controller {
         } catch (Exception exp) {
             throw new Exception(new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR).toJSONString());
         }
+    }
+
+    @Override
+    public List<Subscription> getSubscriptionStudio(int studioID) throws ResponseException {
+        return null;
+    }
+
+    @Override
+    public List<Subscription> getSubscriptionSubscriber(int subscriberID) throws ResponseException {
+        return null;
+    }
+
+    @Override
+    public List<Subscription> getSubscriptionByStatusStudio(int studioID, String status) throws ResponseException {
+        return null;
+    }
+
+    @Override
+    public List<Subscription> getSubscriptionByStatusSubscriber(int subscriberID, String status) throws ResponseException {
+        return null;
+    }
+
+    @Override
+    public Subscription subscribe(int studioID, int subscriberID) throws ResponseException {
+        return null;
+    }
+
+    @Override
+    public Subscription acceptSubscription(int studioID, int subscriberID) throws ResponseException {
+        return null;
+    }
+
+    @Override
+    public Subscription rejectSubscription(int studioID, int subscriberID) throws ResponseException {
+        return null;
+    }
+
+    @Override
+    public List<Subscription> checkStatus(int subscriberID) throws ResponseException {
+        return null;
     }
 }
