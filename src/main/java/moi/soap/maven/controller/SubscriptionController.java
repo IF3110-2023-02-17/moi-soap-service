@@ -2,6 +2,7 @@ package moi.soap.maven.controller;
 
 
 import lombok.NoArgsConstructor;
+import moi.soap.maven.entity.Subscription;
 import moi.soap.maven.exception.ResponseException;
 import moi.soap.maven.middleware.MiddlewareComp;
 import moi.soap.maven.service.ServiceComp;
@@ -17,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @WebService(targetNamespace = "Subscription")
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT)
-public class SubscriptionController extends Controller {
+public class SubscriptionController extends Controller implements ISubscriptionController{
     public SubscriptionController (ServiceComp srv, MiddlewareComp middleware) {
         super(srv, middleware);
     }
@@ -40,24 +41,43 @@ public class SubscriptionController extends Controller {
         }
     }
 
-    @WebMethod
-    @WebResult(name = "result", targetNamespace = "Subscription")
-    public List<Integer> TestExample(@WebParam(name="input") List<Integer> input) throws Exception {
-        try {
-            this.middleware.handlerMiddleware(this.ctx);
-            this.middleware.loggingRemoteAddr(this.ctx, this.HTTP_EXCHANGE_KEY);
+    @Override
+    public List<Subscription> getSubscriptionStudio(int studioID) throws ResponseException {
+        return null;
+    }
 
-            System.out.println(input.size());
-            for (int i = 0; i < input.size(); i++){
-                System.out.println(input.get(i));
-            }
+    @Override
+    public List<Subscription> getSubscriptionSubscriber(int subscriberID) throws ResponseException {
+        return null;
+    }
 
-            return input;
-        } catch (ResponseException exp) {
-            exp.printStackTrace();
-            throw new Exception(exp.toJSONString());
-        } catch (Exception exp) {
-            throw new Exception(new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR).toJSONString());
-        }
+    @Override
+    public List<Subscription> getSubscriptionByStatusStudio(int studioID, String status) throws ResponseException {
+        return null;
+    }
+
+    @Override
+    public List<Subscription> getSubscriptionByStatusSubscriber(int subscriberID, String status) throws ResponseException {
+        return null;
+    }
+
+    @Override
+    public Subscription subscribe(int studioID, int subscriberID) throws ResponseException {
+        return null;
+    }
+
+    @Override
+    public Subscription acceptSubscription(int studioID, int subscriberID) throws ResponseException {
+        return null;
+    }
+
+    @Override
+    public Subscription rejectSubscription(int studioID, int subscriberID) throws ResponseException {
+        return null;
+    }
+
+    @Override
+    public List<Subscription> checkStatus(int subscriberID) throws ResponseException {
+        return null;
     }
 }
