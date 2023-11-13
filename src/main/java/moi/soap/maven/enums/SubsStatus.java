@@ -5,7 +5,6 @@ import lombok.Value;
 
 import javax.xml.bind.annotation.XmlEnum;
 
-@ToString
 @XmlEnum(String.class)
 public enum SubsStatus {
     PENDING,

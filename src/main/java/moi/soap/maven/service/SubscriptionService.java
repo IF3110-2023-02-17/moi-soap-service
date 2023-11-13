@@ -3,6 +3,7 @@ package moi.soap.maven.service;
 import com.google.gson.JsonObject;
 import moi.soap.maven.client.HttpClientComp;
 import moi.soap.maven.entity.Subscription;
+import moi.soap.maven.enums.SubsStatus;
 import moi.soap.maven.exception.ResponseException;
 import moi.soap.maven.repository.RepositoryComp;
 
@@ -24,6 +25,10 @@ public class SubscriptionService extends Service {
         } catch (ResponseException exp) {
             throw new ResponseException(exp.getMessage(), exp.getStatus());
         }
+    }
+
+    public List<Subscription> getSubscriptionByStatusStudio(int studioID, SubsStatus status) throws ResponseException {
+        return this.repo.subscription.findByStudioAndStatus(studioID, status);
     }
 
     public List<String> testHttpClient() throws Exception {

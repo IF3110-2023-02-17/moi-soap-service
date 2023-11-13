@@ -1,6 +1,7 @@
 package moi.soap.maven;
 
 import moi.soap.maven.database.Database;
+import moi.soap.maven.enums.SubsStatus;
 import moi.soap.maven.exception.ResponseException;
 import moi.soap.maven.repository.SubscriptionRepository;
 import moi.soap.maven.utils.ConfigDotenv;
@@ -27,6 +28,13 @@ public class AppTest
         } catch (Exception exp) {
             throw new Exception("Ini Response Cathc 2");
         }
+    }
+
+    @Test
+    public void print() {
+        SubsStatus subsStatus = SubsStatus.valueOf("ACCEPTED");
+
+        System.out.println(subsStatus.toString());
     }
 //    @Test
 //    void TestConnClass() throws SQLException {

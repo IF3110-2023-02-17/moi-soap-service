@@ -21,9 +21,9 @@ public class MiddlewareComp {
             throw exp;
         }
     }
-    public void loggingRemoteAddr(WebServiceContext ctx, String key) {
-        System.out.println(log.getAddress(ctx.getMessageContext(), key));
-        System.out.println("PASS 2.1");
-    }
+//    public void loggingRemoteAddr(WebServiceContext ctx, String key) {
+//        System.out.println(log.getAddress(ctx.getMessageContext(), key));
+//        System.out.println("PASS 2.1");
+//    }
 
 }
