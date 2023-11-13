@@ -39,4 +39,25 @@ public class SubscriptionController extends Controller {
             throw new Exception(new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR).toJSONString());
         }
     }
+
+    @WebMethod
+    @WebResult(name = "result", targetNamespace = "Subscription")
+    public List<Integer> TestExample(@WebParam(name="input") List<Integer> input) throws Exception {
+        try {
+            this.middleware.handlerMiddleware(this.ctx);
+            this.middleware.loggingRemoteAddr(this.ctx, this.HTTP_EXCHANGE_KEY);
+
+            System.out.println(input.size());
+            for (int i = 0; i < input.size(); i++){
+                System.out.println(input.get(i));
+            }
+
+            return input;
+        } catch (ResponseException exp) {
+            exp.printStackTrace();
+            throw new Exception(exp.toJSONString());
+        } catch (Exception exp) {
+            throw new Exception(new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR).toJSONString());
+        }
+    }
 }
