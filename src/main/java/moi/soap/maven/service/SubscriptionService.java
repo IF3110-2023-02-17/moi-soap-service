@@ -3,6 +3,7 @@ package moi.soap.maven.service;
 import com.google.gson.JsonObject;
 import moi.soap.maven.client.HttpClientComp;
 import moi.soap.maven.entity.Subscription;
+import moi.soap.maven.exception.ResponseException;
 import moi.soap.maven.repository.RepositoryComp;
 
 import java.util.ArrayList;
@@ -14,17 +15,18 @@ public class SubscriptionService extends Service {
         super(repo, http);
     }
 
-    public List<Subscription> getAllSubscribers(int sortType) throws Exception {
+    public List<Subscription> getAllSubscribers(int sortType) throws ResponseException {
         try {
             System.out.println("[Service]");
 
             return repo.subscription.findAll(sortType);
-        } catch (Exception e) {
-            throw new Exception("[Service] " + e.getMessage());
+
+        } catch (ResponseException exp) {
+            throw new ResponseException(exp.getMessage(), exp.getStatus());
         }
     }
 
-    public List<String> testHttpClient() throws Exception{
+    public List<String> testHttpClient() throws Exception {
         JsonObject res = http.rest.getTest();
         List<String> resList = new ArrayList<>();
         resList.add("result url = " + res.getAsJsonObject("param").get("url").getAsString());

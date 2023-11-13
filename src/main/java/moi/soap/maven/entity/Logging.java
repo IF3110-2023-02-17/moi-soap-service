@@ -12,6 +12,4 @@ public class Logging {
     private String ip;
     private String endpoint;
     private Timestamp requestedAt;
-
-
 }

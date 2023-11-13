@@ -1,6 +1,7 @@
 package moi.soap.maven;
 
 import moi.soap.maven.database.Database;
+import moi.soap.maven.exception.ResponseException;
 import moi.soap.maven.repository.SubscriptionRepository;
 import moi.soap.maven.utils.ConfigDotenv;
 import org.junit.jupiter.api.Assertions;
@@ -17,7 +18,16 @@ public class AppTest
     /**
      * Rigorous Test :-)
      */
-
+    @Test
+    void  TestCatch() throws Exception {
+        try {
+            throw new Exception("Ini Response");
+        } catch (ResponseException exp) {
+            throw new Exception("Ini Response Catch 1");
+        } catch (Exception exp) {
+            throw new Exception("Ini Response Cathc 2");
+        }
+    }
 //    @Test
 //    void TestConnClass() throws SQLException {
 //        Connection conn = Database.getInstance().getConnection();

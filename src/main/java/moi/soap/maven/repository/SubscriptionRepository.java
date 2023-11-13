@@ -4,6 +4,8 @@ import moi.soap.maven.client.HttpClientComp;
 import moi.soap.maven.client.HttpRestClient;
 import moi.soap.maven.database.Database;
 import moi.soap.maven.entity.Subscription;
+import moi.soap.maven.exception.ResponseException;
+import org.apache.hc.core5.http.HttpStatus;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +19,7 @@ public class SubscriptionRepository extends Repository {
         super(db);
     }
 
-    public List<Subscription> findAll(int sortBy) throws Exception {
+    public List<Subscription> findAll(int sortBy) throws ResponseException {
         try {
             Connection conn = this.db.getConnection();
 
@@ -54,8 +56,8 @@ public class SubscriptionRepository extends Repository {
 
             return subscriptions;
 
-        } catch (Exception e) {
-            throw new Exception("[Repo] " + e.getMessage());
+        } catch (Exception exp) {
+            throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }

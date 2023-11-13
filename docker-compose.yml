@@ -1,15 +1,7 @@
-version: "3.3"
+version: "3.9"
 services:
-#  soap-app:
-#    image: if3110-soap-service-1:latest
-#    ports:
-#      - 8002:8002
-#    hostname: soap-app
-#    environment:
-#      - SOAP_DOCKER_CONFIG=on
-#    volumes:
-#      - .:/app
   soap-database:
+    container_name: soap-database
     image: mysql:latest
     ports:
       - 3317:3307
@@ -19,7 +11,26 @@ services:
     volumes:
       - ./mysql:/var/lib/mysql
       - ./init:/docker-entrypoint-initdb.d
+    networks:
+      - soap-service-network
+
+  soap-app:
+    container_name: soap-app
+    image: if3110-soap-service-1:latest
+    restart: on-failure
+    ports:
+      - 8002:8002
+    hostname: soap-app
+    environment:
+      - SOAP_DOCKER_CONFIG=on
+    volumes:
+      - .:/app
+    depends_on:
+      - soap-database
+    networks:
+      - soap-service-network
 
 networks:
-  soap-app-soap-database:
+  soap-service-network:
     driver: bridge
+    name: soap-service-network

@@ -27,6 +27,7 @@ public class Database {
         conf.setMinimumIdle(Integer.parseInt(confApp.getProp("db.min_idle")));
         conf.setIdleTimeout(Integer.parseInt(confApp.getProp("db.idle_timeout")));
         conf.setMaxLifetime(Integer.parseInt(confApp.getProp("db.max_lifetime")) * Integer.parseInt(confApp.getProp("db.idle_timeout")));
+        System.out.println(conf.getJdbcUrl());
 
         this.dataSource = new HikariDataSource(conf);
     }
