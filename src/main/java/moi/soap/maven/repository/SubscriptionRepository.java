@@ -247,4 +247,65 @@ public class SubscriptionRepository extends Repository {
             throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public List<Subscription> findByStudio(int studioID) throws ResponseException {
+        try {
+            Connection conn = this.db.getConnection();
+
+            String sql = "SELECT studio_id, subscriber_id, status FROM subscription WHERE studio_id = ?";
+
+            PreparedStatement statement = conn.prepareStatement(sql);
+
+            statement.setInt(1, studioID);
+
+            ResultSet raw = statement.executeQuery();
+
+            List<Subscription> subscriptions = new ArrayList<>();
+            while (raw.next()) {
+                Subscription subs = new Subscription(
+                        raw.getInt("studio_id"),
+                        raw.getInt("subscriber_id"),
+                        raw.getString("status")
+                );
+                subscriptions.add(subs);
+            }
+            statement.close();
+            conn.close();
+
+            return subscriptions;
+
+        } catch (Exception exp) {
+            throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+    public List<Subscription> findBySubscriber(int subscriberID) throws ResponseException {
+        try {
+            Connection conn = this.db.getConnection();
+
+            String sql = "SELECT studio_id, subscriber_id, status FROM subscription WHERE subscriber_id = ?";
+
+            PreparedStatement statement = conn.prepareStatement(sql);
+
+            statement.setInt(1, subscriberID);
+
+            ResultSet raw = statement.executeQuery();
+
+            List<Subscription> subscriptions = new ArrayList<>();
+            while (raw.next()) {
+                Subscription subs = new Subscription(
+                        raw.getInt("studio_id"),
+                        raw.getInt("subscriber_id"),
+                        raw.getString("status")
+                );
+                subscriptions.add(subs);
+            }
+            statement.close();
+            conn.close();
+
+            return subscriptions;
+
+        } catch (Exception exp) {
+            throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
