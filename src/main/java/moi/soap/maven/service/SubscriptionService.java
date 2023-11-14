@@ -56,6 +56,24 @@ public class SubscriptionService extends Service {
         }
     }
 
+    public Subscription acceptSubscription (int subscriberID, int studioID) throws ResponseException {
+        try {
+            Subscription subscription = this.repo.subscription.findSubscriptionFirst(studioID, subscriberID);
+
+            if (subscription.getStatus() == SubsStatus.ACCEPTED) {
+                throw new ResponseException("Subscription Already Accepted", 400);
+            }
+
+            subscription.setStatus(SubsStatus.ACCEPTED);
+
+            this.repo.subscription.updateSubscription(subscription);
+
+            return  subscription;
+        } catch (ResponseException exp) {
+            throw new ResponseException(exp.getMessage(), exp.getStatus());
+        }
+    }
+
     public List<String> testHttpClient() throws Exception {
         JsonObject res = http.rest.getTest();
         List<String> resList = new ArrayList<>();

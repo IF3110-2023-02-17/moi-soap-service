@@ -197,4 +197,54 @@ public class SubscriptionRepository extends Repository {
             throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public Subscription findSubscriptionFirst(int studioID, int subscriberID) throws ResponseException {
+        try {
+            Connection conn = this.db.getConnection();
+            String sql = "SELECT studio_id, subscriber_id, status FROM subscription WHERE studio_id = ? AND subscriber_id = ? LIMIT 1";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, studioID);
+            statement.setInt(2, subscriberID);
+
+            ResultSet raw = statement.executeQuery();
+
+            Subscription subscription = new Subscription();
+            if (raw.next()) {
+                subscription.setStudioId(raw.getInt("studio_id"));
+                subscription.setSubsId(raw.getInt("subscriber_id"));
+                subscription.setStatus(SubsStatus.valueOf(raw.getString("status")));
+            }
+
+            statement.close();
+            conn.close();
+
+            return subscription;
+        } catch (Exception exp) {
+            exp.printStackTrace();
+            throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+    public void updateSubscription(Subscription subscription) throws ResponseException {
+        try {
+            Connection conn = this.db.getConnection();
+
+            String sql = "UPDATE subscription SET status = ? WHERE studio_id = ? AND subscriber_id = ?";
+
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, subscription.getStatus().toString());
+            statement.setInt(2, subscription.getStudioId());
+            statement.setInt(3, subscription.getSubsId());
+
+            int rowAffected = statement.executeUpdate();
+            if (rowAffected != 1) {
+                throw new Exception("No Rows Affected");
+            }
+
+            statement.close();
+            conn.close();
+        } catch (Exception exp) {
+            exp.printStackTrace();
+            throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

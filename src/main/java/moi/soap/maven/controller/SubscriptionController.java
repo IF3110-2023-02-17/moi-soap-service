@@ -131,8 +131,27 @@ public class SubscriptionController extends Controller implements ISubscriptionC
     }
 
     @Override
-    public Subscription acceptSubscription(int studioID, int subscriberID) throws Exception {
-        return null;
+    @WebMethod
+    @WebResult(name = "result", targetNamespace = "Subscription")
+    public Subscription acceptSubscription(@WebParam(name="studioID") int studioID, @WebParam(name="subscriberID") int subscriberID) throws Exception {
+        try{
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("studioID", studioID);
+            params.put("subscriberID", subscriberID);
+            this.middleware.handlerMiddleware(this.ctx, "Subscription.acceptSubscription", params);
+
+            Subscription result = this.srv.subscription.acceptSubscription(subscriberID, studioID);
+
+            return result;
+        } catch (ResponseException exp) {
+            exp.printStackTrace();
+            throw new Exception(exp.toJSONString());
+
+        } catch (Exception exp) {
+            throw new Exception(new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR).toJSONString());
+
+        }
     }
 
     @Override
