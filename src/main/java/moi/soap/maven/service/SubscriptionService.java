@@ -83,4 +83,11 @@ public class SubscriptionService extends Service {
 
         return resList;
     }
+
+    public List<Subscription> getSubscriptionSubscriber(int subscriberID) throws ResponseException {
+        return this.repo.subscription.findBySubscriber(subscriberID);
+    }
+    public List<Subscription> getSubscriptionStudio(int studioID) throws ResponseException {
+        return this.repo.subscription.findByStudio(studioID);
+    }
 }
