@@ -14,6 +14,11 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -186,4 +191,66 @@ public class SubscriptionController extends Controller implements ISubscriptionC
 
         }
     }
+
+    public List<Subscription> findByStudio(int studioID) throws ResponseException {
+        try {
+            Connection conn = this.db.getConnection();
+
+            String sql = "SELECT studio_id, subscriber_id, status FROM subscription WHERE studio_id = ?";
+
+            PreparedStatement statement = conn.prepareStatement(sql);
+
+            statement.setInt(1, studioID);
+
+            ResultSet raw = statement.executeQuery();
+
+            List<Subscription> subscriptions = new ArrayList<>();
+            while (raw.next()) {
+                Subscription subs = new Subscription(
+                        raw.getInt("studio_id"),
+                        raw.getInt("subscriber_id"),
+                        raw.getString("status")
+                );
+                subscriptions.add(subs);
+            }
+            statement.close();
+            conn.close();
+
+            return subscriptions;
+
+        } catch (Exception exp) {
+            throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+    public List<Subscription> findBySubscriber(int subscriberID) throws ResponseException {
+        try {
+            Connection conn = this.db.getConnection();
+
+            String sql = "SELECT studio_id, subscriber_id, status FROM subscription WHERE subscriber_id = ?";
+
+            PreparedStatement statement = conn.prepareStatement(sql);
+
+            statement.setInt(1, subscriberID);
+
+            ResultSet raw = statement.executeQuery();
+
+            List<Subscription> subscriptions = new ArrayList<>();
+            while (raw.next()) {
+                Subscription subs = new Subscription(
+                        raw.getInt("studio_id"),
+                        raw.getInt("subscriber_id"),
+                        raw.getString("status")
+                );
+                subscriptions.add(subs);
+            }
+            statement.close();
+            conn.close();
+
+            return subscriptions;
+
+        } catch (Exception exp) {
+            throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
+
