@@ -39,7 +39,9 @@ public class SubscriptionService extends Service {
     public List<Subscription> getSubscriptionByStatusStudio(int studioID, SubsStatus status) throws ResponseException {
         return this.repo.subscription.findByStudioAndStatus(studioID, status);
     }
-
+    public List<Subscription> getSubscriptionByStatusSubscriber(int subscriberID, SubsStatus status) throws ResponseException {
+        return this.repo.subscription.findBySubscriberAndStatus(subscriberID, status);
+    }
     public List<Subscription> checkStatus( List<Integer> subscriberIDs, List<Integer> studioIDs) throws ResponseException {
         try {
             List<Subscription> subscriptions = new ArrayList<>();

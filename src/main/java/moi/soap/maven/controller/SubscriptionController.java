@@ -82,9 +82,29 @@ public class SubscriptionController extends Controller implements ISubscriptionC
     }
 
     @Override
-    public List<Subscription> getSubscriptionByStatusSubscriber(int subscriberID, String status) throws Exception {
-        return null;
+    @WebMethod
+    @WebResult(name = "result", targetNamespace = "Subscription")
+    public List<Subscription> getSubscriptionByStatusSubscriber(@WebParam(name="subscriberID")int subscriberID, @WebParam(name="status") String status) throws Exception {
+        try{
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("subscriberID", subscriberID);
+            params.put("status", status);
+            this.middleware.handlerMiddleware(this.ctx, "Subscription.getSubscriptionByStatusSubscriber", params);
+
+            SubsStatus subsStatus = SubsStatus.valueOf(status);
+
+            List<Subscription> result = this.srv.subscription.getSubscriptionByStatusSubscriber(subscriberID, subsStatus);
+
+            return  result;
+        } catch (ResponseException exp) {
+            exp.printStackTrace();
+            throw new Exception(exp.toJSONString());
+        } catch (Exception exp) {
+            throw new Exception(new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR).toJSONString());
+        }
     }
+
 
     @Override
     @WebMethod

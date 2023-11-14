@@ -123,6 +123,39 @@ public class SubscriptionRepository extends Repository {
             throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
         }
     }
+    public List<Subscription> findBySubscriberAndStatus(int subscriberID, SubsStatus status) throws ResponseException {
+        try {
+            Connection conn = this.db.getConnection();
+
+            System.out.println("[Repo]" + status.toString());
+
+            String sql = "SELECT studio_id, subscriber_id, status FROM subscription WHERE subscriber_id = ? AND status = ?";
+
+            PreparedStatement statement = conn.prepareStatement(sql);
+
+            statement.setInt(1, subscriberID);
+            statement.setString(2, status.toString());
+
+            ResultSet raw = statement.executeQuery();
+
+            List<Subscription> subscriptions = new ArrayList<>();
+            while (raw.next()) {
+                Subscription subs = new Subscription(
+                        raw.getInt("studio_id"),
+                        raw.getInt("subscriber_id"),
+                        raw.getString("status")
+                );
+                subscriptions.add(subs);
+            }
+            statement.close();
+            conn.close();
+
+            return subscriptions;
+
+        } catch (Exception exp) {
+            throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
     public List<Subscription> findAll(int sortBy) throws ResponseException {
         try {
             Connection conn = this.db.getConnection();
