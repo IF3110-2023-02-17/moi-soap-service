@@ -16,7 +16,6 @@ public class SubscriptionService extends Service {
     public SubscriptionService(RepositoryComp repo, HttpClientComp http) {
         super(repo, http);
     }
-
     public List<Subscription> getAllSubscribers(int sortType) throws ResponseException {
         try {
             System.out.println("[Service]");
@@ -27,7 +26,6 @@ public class SubscriptionService extends Service {
             throw new ResponseException(exp.getMessage(), exp.getStatus());
         }
     }
-
     public Subscription subscribe(int studioID, int subscriberID) throws ResponseException {
         Subscription subscription = new Subscription(studioID, subscriberID);
 
@@ -35,7 +33,6 @@ public class SubscriptionService extends Service {
 
         return subscription;
     }
-
     public List<Subscription> getSubscriptionByStatusStudio(int studioID, SubsStatus status) throws ResponseException {
         return this.repo.subscription.findByStudioAndStatus(studioID, status);
     }
@@ -55,7 +52,6 @@ public class SubscriptionService extends Service {
             throw exp;
         }
     }
-
     public Subscription acceptSubscription (int subscriberID, int studioID) throws ResponseException {
         try {
             Subscription subscription = this.repo.subscription.findSubscriptionFirst(studioID, subscriberID);
@@ -73,7 +69,23 @@ public class SubscriptionService extends Service {
             throw new ResponseException(exp.getMessage(), exp.getStatus());
         }
     }
+    public Subscription rejectSubscription (int subscriberID, int studioID) throws ResponseException {
+        try {
+            Subscription subscription = this.repo.subscription.findSubscriptionFirst(studioID, subscriberID);
 
+            if (subscription.getStatus() == SubsStatus.REJECTED) {
+                throw new ResponseException("Subscription Already Rejected", 400);
+            }
+
+            subscription.setStatus(SubsStatus.ACCEPTED);
+
+            this.repo.subscription.updateSubscription(subscription);
+
+            return  subscription;
+        } catch (ResponseException exp) {
+            throw new ResponseException(exp.getMessage(), exp.getStatus());
+        }
+    }
     public List<String> testHttpClient() throws Exception {
         JsonObject res = http.rest.getTest();
         List<String> resList = new ArrayList<>();
@@ -83,7 +95,6 @@ public class SubscriptionService extends Service {
 
         return resList;
     }
-
     public List<Subscription> getSubscriptionSubscriber(int subscriberID) throws ResponseException {
         return this.repo.subscription.findBySubscriber(subscriberID);
     }

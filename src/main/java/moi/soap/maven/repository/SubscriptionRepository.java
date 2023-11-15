@@ -247,7 +247,6 @@ public class SubscriptionRepository extends Repository {
             throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
         }
     }
-
     public List<Subscription> findByStudio(int studioID) throws ResponseException {
         try {
             Connection conn = this.db.getConnection();

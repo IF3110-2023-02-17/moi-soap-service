@@ -15,10 +15,6 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,17 +47,46 @@ public class SubscriptionController extends Controller implements ISubscriptionC
             throw new Exception(new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR).toJSONString());
         }
     }
-
     @Override
-    public List<Subscription> getSubscriptionStudio(int studioID) throws Exception {
-        return null;
-    }
+    @WebMethod
+    @WebResult(name = "result", targetNamespace = "Subscription")
+    public List<Subscription> getSubscriptionStudio(@WebParam(name="studioID") int studioID) throws Exception {
+        try{
 
+            Map<String, Object> params = new HashMap<>();
+            params.put("studioID", studioID);
+            this.middleware.handlerMiddleware(this.ctx, "Subscription.getSubscriptionStudio", params);
+
+            List<Subscription> result = this.srv.subscription.getSubscriptionStudio(studioID);
+
+            return  result;
+        } catch (ResponseException exp) {
+            exp.printStackTrace();
+            throw new Exception(exp.toJSONString());
+        } catch (Exception exp) {
+            throw new Exception(new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR).toJSONString());
+        }
+    }
     @Override
-    public List<Subscription> getSubscriptionSubscriber(int subscriberID) throws Exception {
-        return null;
-    }
+    @WebMethod
+    @WebResult(name = "result", targetNamespace = "Subscription")
+    public List<Subscription> getSubscriptionSubscriber(@WebParam(name="subscriberID") int subscriberID) throws Exception {
+        try{
 
+            Map<String, Object> params = new HashMap<>();
+            params.put("subscriberID", subscriberID);
+            this.middleware.handlerMiddleware(this.ctx, "Subscription.getSubscriptionSubscriber", params);
+
+            List<Subscription> result = this.srv.subscription.getSubscriptionSubscriber(subscriberID);
+
+            return  result;
+        } catch (ResponseException exp) {
+            exp.printStackTrace();
+            throw new Exception(exp.toJSONString());
+        } catch (Exception exp) {
+            throw new Exception(new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR).toJSONString());
+        }
+    }
     @Override
     @WebMethod
     @WebResult(name = "result", targetNamespace = "Subscription")
@@ -85,7 +110,6 @@ public class SubscriptionController extends Controller implements ISubscriptionC
             throw new Exception(new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR).toJSONString());
         }
     }
-
     @Override
     @WebMethod
     @WebResult(name = "result", targetNamespace = "Subscription")
@@ -109,8 +133,6 @@ public class SubscriptionController extends Controller implements ISubscriptionC
             throw new Exception(new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR).toJSONString());
         }
     }
-
-
     @Override
     @WebMethod
     @WebResult(name = "result", targetNamespace = "Subscription")
@@ -158,12 +180,29 @@ public class SubscriptionController extends Controller implements ISubscriptionC
 
         }
     }
-
     @Override
-    public Subscription rejectSubscription(int studioID, int subscriberID) throws Exception {
-        return null;
-    }
+    @WebMethod
+    @WebResult(name = "result", targetNamespace = "Subscription")
+    public Subscription rejectSubscription(@WebParam(name="studioID") int studioID, @WebParam(name="subscriberID") int subscriberID) throws Exception {
+        try{
 
+            Map<String, Object> params = new HashMap<>();
+            params.put("studioID", studioID);
+            params.put("subscriberID", subscriberID);
+            this.middleware.handlerMiddleware(this.ctx, "Subscription.rejectSubscription", params);
+
+            Subscription result = this.srv.subscription.rejectSubscription(subscriberID, studioID);
+
+            return result;
+        } catch (ResponseException exp) {
+            exp.printStackTrace();
+            throw new Exception(exp.toJSONString());
+
+        } catch (Exception exp) {
+            throw new Exception(new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR).toJSONString());
+
+        }
+    }
     @Override
     @WebMethod
     @WebResult(name = "result", targetNamespace = "Subscription")
@@ -189,67 +228,6 @@ public class SubscriptionController extends Controller implements ISubscriptionC
         } catch (Exception exp) {
             throw new Exception(new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR).toJSONString());
 
-        }
-    }
-
-    public List<Subscription> findByStudio(int studioID) throws ResponseException {
-        try {
-            Connection conn = this.db.getConnection();
-
-            String sql = "SELECT studio_id, subscriber_id, status FROM subscription WHERE studio_id = ?";
-
-            PreparedStatement statement = conn.prepareStatement(sql);
-
-            statement.setInt(1, studioID);
-
-            ResultSet raw = statement.executeQuery();
-
-            List<Subscription> subscriptions = new ArrayList<>();
-            while (raw.next()) {
-                Subscription subs = new Subscription(
-                        raw.getInt("studio_id"),
-                        raw.getInt("subscriber_id"),
-                        raw.getString("status")
-                );
-                subscriptions.add(subs);
-            }
-            statement.close();
-            conn.close();
-
-            return subscriptions;
-
-        } catch (Exception exp) {
-            throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
-        }
-    }
-    public List<Subscription> findBySubscriber(int subscriberID) throws ResponseException {
-        try {
-            Connection conn = this.db.getConnection();
-
-            String sql = "SELECT studio_id, subscriber_id, status FROM subscription WHERE subscriber_id = ?";
-
-            PreparedStatement statement = conn.prepareStatement(sql);
-
-            statement.setInt(1, subscriberID);
-
-            ResultSet raw = statement.executeQuery();
-
-            List<Subscription> subscriptions = new ArrayList<>();
-            while (raw.next()) {
-                Subscription subs = new Subscription(
-                        raw.getInt("studio_id"),
-                        raw.getInt("subscriber_id"),
-                        raw.getString("status")
-                );
-                subscriptions.add(subs);
-            }
-            statement.close();
-            conn.close();
-
-            return subscriptions;
-
-        } catch (Exception exp) {
-            throw new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }
