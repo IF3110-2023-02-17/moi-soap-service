@@ -1,6 +1,24 @@
+# Deskripsi Singkat Web Service
+
+# Skema Basis Data
+<img width="608" alt="image" src="https://github.com/IF3110-2023-02-17/moi-soap-service/assets/73476678/7b12b58a-a300-41a5-86cc-cba0187d345e">
+
+# Endpoint API
+- subscribe
+- getSubscriptionByStatusSubscriber
+- getSubscirptionByStatusStudio
+- checkStatus
+
+# Pembagian Tugas
+- Fungsi Subscribe : 13521109
+- Fungsi Accept Subscribe : 13521171
+- Fungsi Reject Subscribe : 13521109
+- Read By Subscriber or Studio With Status : 13521109
+- Read By Subscriber or Studio : 13521067
+- Revalidate Status Subscribe : 13521067
+- Callback : 13521109
+
 # HOW TO RUN
-
-
 
 ### RUN DEV 
 1. Pastikan maven sudah terinstall dan menggunakan jdk 8 / 1.8
