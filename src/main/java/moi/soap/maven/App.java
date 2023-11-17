@@ -18,7 +18,6 @@ public class App
         try {
 
             Config conf = Config.getInstance();
-
             Database db = Database.getInstance();
             HttpClientComp http = HttpClientComp.getInstance();
             RepositoryComp repo = new RepositoryComp(db);

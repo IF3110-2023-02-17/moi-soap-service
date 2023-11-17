@@ -31,6 +31,8 @@ public class SubscriptionService extends Service {
 
         this.repo.subscription.insertSubscription(subscription);
 
+        this.http.mono.callbackChange(subscription);
+
         return subscription;
     }
     public List<Subscription> getSubscriptionByStatusStudio(int studioID, SubsStatus status) throws ResponseException {
@@ -64,6 +66,8 @@ public class SubscriptionService extends Service {
 
             this.repo.subscription.updateSubscription(subscription);
 
+            this.http.mono.callbackChange(subscription);
+
             return  subscription;
         } catch (ResponseException exp) {
             throw new ResponseException(exp.getMessage(), exp.getStatus());
@@ -77,9 +81,11 @@ public class SubscriptionService extends Service {
                 throw new ResponseException("Subscription Already Rejected", 400);
             }
 
-            subscription.setStatus(SubsStatus.ACCEPTED);
+            subscription.setStatus(SubsStatus.REJECTED);
 
             this.repo.subscription.updateSubscription(subscription);
+
+            this.http.mono.callbackChange(subscription);
 
             return  subscription;
         } catch (ResponseException exp) {

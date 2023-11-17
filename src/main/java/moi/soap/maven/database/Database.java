@@ -15,6 +15,12 @@ public class Database {
         HikariConfig conf = new HikariConfig();
         Config confApp = Config.getInstance();
 
+        System.out.println(String.format("jdbc:%s://%s:%s/%s",
+                confApp.getEnv("SOAP_DATABASE"),
+                confApp.getEnv("SOAP_DB_HOSTNAME"),
+                confApp.getProp("db.port"),
+                confApp.getEnv("MYSQL_DATABASE")));
+
         conf.setDriverClassName("com.mysql.cj.jdbc.Driver");
         conf.setJdbcUrl(String.format("jdbc:%s://%s:%s/%s",
                 confApp.getEnv("SOAP_DATABASE"),

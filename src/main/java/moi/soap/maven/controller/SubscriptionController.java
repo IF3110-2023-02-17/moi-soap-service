@@ -30,19 +30,19 @@ public class SubscriptionController extends Controller implements ISubscriptionC
     @WebResult(name = "result", targetNamespace = "Subscription")
     public List<Integer> Example(@WebParam(name="input") List<Integer> input) throws Exception {
         try {
-            Map<String, Object> params = new HashMap<>();
-            params.put("input", input);
-
-            this.middleware.handlerMiddleware(this.ctx, "Subscription.Example", params);
+//            Map<String, Object> params = new HashMap<>();
+//            params.put("input", input);
+//
+//            this.middleware.handlerMiddleware(this.ctx, "Subscription.Example", params);
 
             System.out.println(input.size());
             for (int i = 0; i < input.size(); i++){
                 System.out.println(input.get(i));
             }
             return input;
-        } catch (ResponseException exp) {
-            exp.printStackTrace();
-            throw new Exception(exp.toJSONString());
+//        } catch (ResponseException exp) {
+//            exp.printStackTrace();
+//            throw new Exception(exp.toJSONString());
         } catch (Exception exp) {
             throw new Exception(new ResponseException("Internal Server Error", HttpStatus.SC_INTERNAL_SERVER_ERROR).toJSONString());
         }
@@ -215,7 +215,7 @@ public class SubscriptionController extends Controller implements ISubscriptionC
             this.middleware.handlerMiddleware(this.ctx, "Subscription.checkStatus", params);
 
             if (studioIDs.size() != subscriberIDs.size()) {
-                throw new ResponseException("Param Invalid", HttpStatus.SC_BAD_GATEWAY);
+                throw new ResponseException("Param Invalid", HttpStatus.SC_BAD_REQUEST);
             }
 
             List<Subscription> result = this.srv.subscription.checkStatus(subscriberIDs, studioIDs);
