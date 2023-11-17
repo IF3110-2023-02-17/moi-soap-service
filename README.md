@@ -1,4 +1,5 @@
 # Deskripsi Singkat Web Service
+Web service berfungsi untuk menggolah data subscription pada sistem. Studio dapat menerima request subscription dari user: yang kemudian dapat diterima ataupun ditolak.
 
 # Skema Basis Data
 <img width="608" alt="image" src="https://github.com/IF3110-2023-02-17/moi-soap-service/assets/73476678/7b12b58a-a300-41a5-86cc-cba0187d345e">
